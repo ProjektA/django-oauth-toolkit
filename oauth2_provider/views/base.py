@@ -189,7 +189,6 @@ class AuthorizationView(BaseAuthorizationView, FormView):
 
 
 @method_decorator(csrf_exempt, name="dispatch")
-@transaction.atomic()
 class TokenView(OAuthLibMixin, View):
     """
     Implements an endpoint to provide access tokens
@@ -204,6 +203,7 @@ class TokenView(OAuthLibMixin, View):
     oauthlib_backend_class = oauth2_settings.OAUTH2_BACKEND_CLASS
 
     @method_decorator(sensitive_post_parameters("password"))
+    @transaction.atomic
     def post(self, request, *args, **kwargs):
         url, headers, body, status = self.create_token_response(request)
         if status == 200:
