@@ -8,6 +8,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.generic import FormView, View
+from django.db import transaction
 
 from ..exceptions import OAuthToolkitError
 from ..forms import AllowForm
@@ -188,6 +189,7 @@ class AuthorizationView(BaseAuthorizationView, FormView):
 
 
 @method_decorator(csrf_exempt, name="dispatch")
+@transaction.atomic()
 class TokenView(OAuthLibMixin, View):
     """
     Implements an endpoint to provide access tokens
